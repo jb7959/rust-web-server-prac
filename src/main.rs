@@ -1,4 +1,10 @@
 fn main() {
+    let get = Method::GET("abc".to_string());
+    let delete = Method::DELETE(100);
+    let post = Method::POST;
+    let put = Method::PUT;
+
+
     let server = Server::new("127.0.0.1:8080".to_string());
     server.run();
 }
@@ -22,3 +28,28 @@ impl Server {
         println!("Listening on {}", self.addr);
     }
 }
+
+struct Request {
+    path: String,
+    query_string: String,
+    method: Method,
+}
+
+// enum은 각 순서마다 Default는 메모리에 0부터 1씩 증가하며 값을 할당한다.
+enum Method {
+    GET(String),
+    DELETE(u64),
+    POST,
+    PUT,
+    HEAD,
+    CONNECT,
+    OPTIONS,
+    TRACE,
+    PATCH,
+}
+
+/*
+GET /user?id=10 HTTP/1.1\r\n
+HEADERS \r\n
+BODY
+*/
