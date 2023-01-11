@@ -1,5 +1,8 @@
+use server::Server;
+use http::request::Request;
+
 fn main() {
-    let server = server::Server::new("127.0.0.1:8080".to_string());
+    let server = Server::new("127.0.0.1:8080".to_string());
     server.run();
 }
 
@@ -26,15 +29,17 @@ mod server {
 }
 
 mod http {
-    mod request {
-        struct Request {
+    pub mod request {
+        use super::method::Method;
+
+        pub struct Request {
             path: String,
             query_string: Option<String>,
-            method: super::method::Method,
+            method: Method,
         }
     }
 
-    mod method {
+    pub mod method {
         // enum은 각 순서마다 Default는 메모리에 0부터 1씩 증가하며 값을 할당한다.
         // pub가 아니면 private 다.
         pub enum Method {
