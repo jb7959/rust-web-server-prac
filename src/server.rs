@@ -1,3 +1,5 @@
+use std::net::TcpListener;
+
 pub struct Server {
     addr: String,
 }
@@ -15,5 +17,9 @@ impl Server {
     // self를 통해 구조체의 인스턴스를 인자로 받는다.
     pub fn run(self) {
         println!("Listening on {}", self.addr);
+        // 러스트는 Exception Handler를 별도로 지원하지 않는다.
+        // 러스트는 복구가능한 에러와 불가능한 에러로 구분하며,
+        // 복구가능한 에러의 경우 핸들러 역할을 하는 Result를 지원한다.
+        let listener = TcpListener::bind(&self.addr).unwrap();
     }
 }

@@ -1,7 +1,6 @@
 use server::Server;
 use http::Request;
 use http::Method;
-
 mod server;
 mod http; // http.rs 혹은 http/mod.rs를 모듈로 대입한다.
 
