@@ -32,7 +32,6 @@ impl Server {
         }*/
         // 튜플
         //let tup = (5, "a", listener);
-
         loop {
             let res = listener.accept();
             if res.is_err(){
