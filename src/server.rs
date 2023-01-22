@@ -33,6 +33,25 @@ impl Server {
         // 튜플
         //let tup = (5, "a", listener);
         loop {
+            //match는 switch, enum등에서 동작한다.
+
+/*            match "abcd" {
+                "abcd" => println!(),
+                "a" | "b" => {}
+                _ => {}
+            }*/
+
+            match listener.accept(){
+                // 컴파일러에게 신경쓰지 않는걸 알리려면 _를 선언
+                // OK(_)
+                Ok((stream, _)) => {
+                    let a= 5;
+                    println!("{}", a);
+                }
+                // _ => {} 와 같이 처리하면 스위치문의 Default와 유사하다.
+                Err(e) => println!("Failed to establish a connection: {}", e),
+            }
+
             let res = listener.accept();
             if res.is_err(){
                 continue;
