@@ -1,7 +1,12 @@
+use std::io::Read;
 use std::net::TcpListener;
 
 pub struct Server {
     addr: String,
+}
+
+fn arr(a: &[u8]){
+
 }
 
 impl Server {
@@ -19,9 +24,11 @@ impl Server {
 
         loop {
             match listener.accept(){
-                Ok((stream, _)) => {
-                    let a= 5;
-                    println!("{}", a);
+                Ok((mut stream, _)) => {
+                    let a = [1,2,3,4];
+                    arr(&a);
+                    arr(&a[1..2]); // 이렇게 슬라이스 할 수도 있다.
+                    stream.read();
                 }
                 Err(e) => println!("Failed to establish a connection: {}", e),
             }
