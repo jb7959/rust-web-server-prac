@@ -5,10 +5,6 @@ pub struct Server {
     addr: String,
 }
 
-fn arr(a: &[u8]){
-
-}
-
 impl Server {
     pub fn new(addr: String) -> Self {
         Self {
@@ -25,10 +21,13 @@ impl Server {
         loop {
             match listener.accept(){
                 Ok((mut stream, _)) => {
-                    let a = [1,2,3,4];
-                    arr(&a);
-                    arr(&a[1..2]); // 이렇게 슬라이스 할 수도 있다.
-                    stream.read();
+                    let mut buffer = [0; 1024];
+                    match stream.read(&mut buffer){
+                        Ok(_) => {
+                            print!("Received a request: {}", String::from_utf8_lossy(&buffer));
+                        }
+                        Err(e) => println!("Failed to read from connection: {}", e),
+                    }
                 }
                 Err(e) => println!("Failed to establish a connection: {}", e),
             }
