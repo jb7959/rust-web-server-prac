@@ -15,22 +15,21 @@ pub struct Request {
 // 상호 변환을 위한 구현제를 만들어준다. 예) 암호화 + 복호화
 impl TryForm<&[u8]> for Request {
     type Error = String;
-    fn try_from(value: &[u8]) -> Result<Self, Self::Error> {
-/*        match str::from_utf8(buf) {
-            Ok(request) => {
+    fn try_from(buf: &[u8]) -> Result<Self, Self::Error> {
 
-            },
-            Err(_) => return Err(ParseError::InvalidEncoding),
-        }
-
-        match str::from_utf8(buf).or(Err(ParseError::InvalidEncoding)){
-            Ok(request) => {}
-            Err(e) => return Err(e),
-        }*/
-        //let request = str::from_utf8(buf).or(Err(ParseError::InvalidEncoding))?;
         let request = str::from_utf8(buf)?;
         unimplemented!()
-    };
+    }
+}
+
+fn get_next_word(request: &str) -> Option<(&str, &str)> {
+    for (i, c) in request.chars().enumerate() {
+        if c == ' '{
+            return Some((&request[..i], &request[i + 1..]));
+        }
+    }
+
+    None
 }
 
 pub enum ParseError{
