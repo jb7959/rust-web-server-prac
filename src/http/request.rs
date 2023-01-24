@@ -26,28 +26,6 @@ impl TryForm<&[u8]> for Request {
             return Err(ParseError::InvalidProtocol);
         }
 
-        // 1. match 쓰려고하나 None의 경우 필요가 없음에도 선언해야함 (불필요한 빈매치)
-        let method: Method = method.parse()?;
-        let mut query_string = None;
-        match path.find('?') {
-            Some(i) => {
-                query_string = Some(&path[i + 1..]);
-                path = &path[..i]
-            }
-            None => {
-
-            }
-        }
-
-        // 2. match 를 사용하지 않으면 if가 등장함 + 불필요한 변수 필요
-        let q = path.find('?');
-        if(q.is_some()){
-            let i = q.unwrap();
-            query_string = Some(&path[i + 1..]);
-            path = &path[..i]
-        }
-
-        // 3. rust에는 if let이라는 것이 있음, 불필요한 매치 제거 및 변수도 제거, 깔끔해짐
         if let Some(i) = path.find('?') {
             query_string = Some(&path[i + 1..]);
             path = &path[..i]
