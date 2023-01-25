@@ -6,3 +6,5 @@ This Project is the result of learning Rust language from lecture followed link
 
 ### Certificate
 - https://www.udemy.com/certificate/UC-dc6d951e-aad0-49dc-a0d3-17d2714d76f8/
+
+All copyright has the udemy
