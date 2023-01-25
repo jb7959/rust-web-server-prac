@@ -1,5 +1,5 @@
 # rust-web-server-prac
-rust-web-server-prac
+This Project is the result of learning Rust language from lecture followed link
 
 - https://www.udemy.com/course/rust-fundamentals/
 - https://www.udemy.com/share/107kpe3@CjvCHzkMLT7kRco2bpLsNfSE7fXkMzZo9nSJqu2TR_XPWJyR1_3MhTd9D6ibDZJp/
