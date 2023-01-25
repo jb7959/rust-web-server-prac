@@ -1,7 +1,6 @@
 use std::str::FromStr;
 
-// enum은 각 순서마다 Default는 메모리에 0부터 1씩 증가하며 값을 할당한다.
-// pub가 아니면 private 다.
+#[derive(Debug)]
 pub enum Method {
     GET,
     DELETE,
@@ -17,17 +16,17 @@ pub enum Method {
 impl FromStr for Method {
     type Err = MethodError;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err>{
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            "GET" => OK(Self::GET),
-            "DELETE" => OK(Self::DELETE),
-            "POST" => OK(Self::POST),
-            "PUT" => OK(Self::PUT),
-            "HEAD" => OK(Self::PUT),
-            "CONNECT" => OK(Self::CONNECT),
-            "OPTIONS" => OK(Self::OPTIONS),
-            "TRACE" => OK(Self::TRACE),
-            "PATCH" => OK(Self::PATCH),
+            "GET" => Ok(Self::GET),
+            "DELETE" => Ok(Self::DELETE),
+            "POST" => Ok(Self::POST),
+            "PUT" => Ok(Self::PUT),
+            "HEAD" => Ok(Self::HEAD),
+            "CONNECT" => Ok(Self::CONNECT),
+            "OPTIONS" => Ok(Self::OPTIONS),
+            "TRACE" => Ok(Self::TRACE),
+            "PATCH" => Ok(Self::PATCH),
             _ => Err(MethodError),
         }
     }

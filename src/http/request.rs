@@ -1,21 +1,37 @@
 use super::method::{Method, MethodError};
+use super::QueryString;
 use std::convert::TryFrom;
 use std::error::Error;
-use std::fmt:: {Display, Debug, Formatter, Result as FmtResult};
+use std::fmt::{Debug, Display, Formatter, Result as FmtResult};
 use std::str;
-use std::str::Utf8Error ;
+use std::str::Utf8Error;
 
-pub struct Request {
-    path: String,
-    query_string: Option<String>,
+#[derive(Debug)]
+pub struct Request<'buf> {
+    path: &'buf str,
+    query_string: Option<QueryString<'buf>>,
     method: Method,
 }
 
-// https://doc.rust-lang.org/std/convert/trait.TryFrom.html
-// 상호 변환을 위한 구현제를 만들어준다. 예) 암호화 + 복호화
-impl TryForm<&[u8]> for Request {
-    type Error = String;
-    fn try_from(buf: &[u8]) -> Result<Self, Self::Error> {
+impl<'buf> Request<'buf> {
+    pub fn path(&self) -> &str {
+        &self.path
+    }
+
+    pub fn method(&self) -> &Method {
+        &self.method
+    }
+
+    pub fn query_string(&self) -> Option<&QueryString> {
+        self.query_string.as_ref()
+    }
+}
+
+impl<'buf> TryFrom<&'buf [u8]> for Request<'buf> {
+    type Error = ParseError;
+
+    // GET /search?name=abc&sort=1 HTTP/1.1\r\n...HEADERS...
+    fn try_from(buf: &'buf [u8]) -> Result<Request<'buf>, Self::Error> {
         let request = str::from_utf8(buf)?;
 
         let (method, request) = get_next_word(request).ok_or(ParseError::InvalidRequest)?;
@@ -26,13 +42,19 @@ impl TryForm<&[u8]> for Request {
             return Err(ParseError::InvalidProtocol);
         }
 
+        let method: Method = method.parse()?;
+
+        let mut query_string = None;
         if let Some(i) = path.find('?') {
-            query_string = Some(&path[i + 1..]);
-            path = &path[..i]
+            query_string = Some(QueryString::from(&path[i + 1..]));
+            path = &path[..i];
         }
 
-
-        unimplemented!()
+        Ok(Self {
+            path,
+            query_string,
+            method,
+        })
     }
 }
 
@@ -46,7 +68,7 @@ fn get_next_word(request: &str) -> Option<(&str, &str)> {
     None
 }
 
-pub enum ParseError{
+pub enum ParseError {
     InvalidRequest,
     InvalidEncoding,
     InvalidProtocol,
@@ -56,38 +78,36 @@ pub enum ParseError{
 impl ParseError {
     fn message(&self) -> &str {
         match self {
-            Self::InvalidRequest => "InvalidRequest",
-            Self::InvalidEncoding => "InvalidEncoding",
-            Self::InvalidProtocol => "InvalidProtocol",
-            Self::InvalidMethod => "InvalidMethod",
+            Self::InvalidRequest => "Invalid Request",
+            Self::InvalidEncoding => "Invalid Encoding",
+            Self::InvalidProtocol => "Invalid Protocol",
+            Self::InvalidMethod => "Invalid Method",
         }
     }
 }
 
-impl From<MethodError> for ParseError{
+impl From<MethodError> for ParseError {
     fn from(_: MethodError) -> Self {
-        Self::InvalidEncoding
+        Self::InvalidMethod
     }
 }
 
-impl From<Utf8Error> for ParseError{
+impl From<Utf8Error> for ParseError {
     fn from(_: Utf8Error) -> Self {
         Self::InvalidEncoding
     }
 }
 
 impl Display for ParseError {
-    fn fmt(&self, f: &mut Formatter) -> FmtResult{
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
         write!(f, "{}", self.message())
-    };
+    }
 }
 
 impl Debug for ParseError {
-    fn fmt(&self, f: &mut Formatter) -> FmtResult{
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
         write!(f, "{}", self.message())
-    };
+    }
 }
 
-impl Error for ParseError {
-    
-} 
+impl Error for ParseError {}
