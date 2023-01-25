@@ -2,5 +2,7 @@
 rust-web-server-prac
 
 - https://www.udemy.com/course/rust-fundamentals/
+- https://www.udemy.com/share/107kpe3@CjvCHzkMLT7kRco2bpLsNfSE7fXkMzZo9nSJqu2TR_XPWJyR1_3MhTd9D6ibDZJp/
 
-![image](https://user-images.githubusercontent.com/8626130/214492881-716f8507-f5cd-4a62-a700-5719dc897ec4.png)
+## Certificate
+- https://www.udemy.com/certificate/UC-dc6d951e-aad0-49dc-a0d3-17d2714d76f8/
